@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<head>
+<style>
+input[type=text], select {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type=submit] {
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+input[type=submit]:hover {
+    background-color: #45a049;
+}
+
+div {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px;
+}
+form{
+width:30%;
+}
+</style>
+</head>
+<body>
+
+<div ng-app="myApp" ng-controller="myCtrl">
+	<h1>Welcome to EASY booking!</h1>
+	<h2>Grow your relationships stronger and create memories!</h2>
+	<h2>With us it is easy and fun!</h2>
+	<form>
+		Name:<br/><input type="text" ng-model="name"/><br/>
+		Age:<br/><input type="text" ng-model="age"/><br/>
+		Gender:<br/><select ng-model="selectedGender" ng-options="x for x in gender"></select><br/>
+		Weight:<br/><input type="text" ng-model="weight"/>
+		<p>Please choose your chronic health problems</p>
+		<select multiple ng-model="selectedChronicHealthProblems" ng-options="x for x in chronicHealthProblems"></select>
+
+		<p>Please choose event date</p>
+		<select ng-model="selectedEventDate" ng-options="y for y in eventDates"></select><br/>
+		<br/>
+		<button ng-click="bookEvent()" >Book event</button>
+	</form>
+
+<p>{{restStatus}}</p> 
+<p>{{bookEventStatus}}</p>
+</div>
+
+<script>
+var app = angular.module('myApp', []);
+app.controller('myCtrl', function($scope, $http) {
+	$http.get("http://localhost:8081/RESTService/v1/json/chronichealth/problems")
+	  .then(function(response) {
+		  $scope.chronicHealthProblems = response.data;
+	  }, function(response) {
+		  $scope.restStatus = "Couldn't read chronic healt problems";
+    });
+	$http.get("http://localhost:8081/RESTService/v1/json/event/dates/1")
+		.then(function(response) {
+		  $scope.eventDates = response.data;
+		}, function(response) {
+		  $scope.restStatus = "Couldn't read event dates";
+    });
+	$scope.gender = ["F","M"];
+	
+	$scope.bookEvent = function(){
+		var booking = {
+			name : $scope.name,
+			age : $scope.age,
+			gender : $scope.selectedGender,
+			weight : $scope.weight,
+			chronicHealthProblems : $scope.selectedChronicHealthProblems,
+			eventDate : new Date($scope.selectedEventDate),
+			eventId : 1
+		};
+		
+	$http.post("http://localhost:8081/RESTService/v1/json/bookings", booking)
+		.then(function(response){
+			$scope.bookEventStatus = response.data.name+", your booking was saved for date "+response.data.event.date;
+		}, function(response){
+			$scope.bookEventStatus = "Booking error";
+		});
+	}
+});
+</script>
+
+</body>
+</html>
+

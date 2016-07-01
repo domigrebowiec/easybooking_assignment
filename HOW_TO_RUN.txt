@@ -1,0 +1,3 @@
+1. Do 'mvn clean package' in RESTService directory
+2. Deploy RESTService.war file to your tomcat 
+3. Open index.html 

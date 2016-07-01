@@ -1,0 +1,10 @@
+dk\easybooking\rest\dto\BookingDto.class
+dk\easybooking\rest\repository\BookingRepo.class
+dk\easybooking\rest\services\BookingRESTService.class
+dk\easybooking\rest\services\ChronicHealthRESTService.class
+dk\easybooking\rest\services\EventRESTService.class
+dk\easybooking\rest\repository\EventRepo.class
+dk\easybooking\rest\model\EventOnDate.class
+dk\easybooking\rest\model\Booking.class
+dk\easybooking\rest\model\EventWithDates.class
+dk\easybooking\rest\model\Event.class
